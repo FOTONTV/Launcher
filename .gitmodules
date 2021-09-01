@@ -1,0 +1,3 @@
+[submodule "LauncherModules"]
+	path = LauncherModules
+	url = https://github.com/FOTONTV/LauncherModules
