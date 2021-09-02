@@ -1,0 +1,72 @@
+//file:noinspection GroovyAssignabilityCheck, GroovyAccessibility, GrUnresolvedAccess
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+dependencies {
+    api project(':LauncherCore')
+    compileOnly group: 'io.netty', name: 'netty-codec-http', version: rootProject['verNetty']
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: rootProject['verJunit']
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        //noinspection GrUnresolvedAccess
+        events "passed", "skipped", "failed"
+    }
+}
+
+jar {
+    //noinspection GrDeprecatedAPIUsage
+    classifier = 'clean'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        launcherwsapi(MavenPublication) {
+            artifactId = 'launcher-ws-api'
+            artifact(jar) {
+                classifier ""
+            }
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'FLauncher WebSocket API'
+                description = 'FLauncher WebSocket Module API'
+                url = 'https://launcher.fotontv.fun'
+                licenses {
+                    license {
+                        name = 'GNU General Public License, Version 3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'fotontv'
+                        name = 'FOTONTV'
+                        email = 'fotontv@fotontv.fun'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/FOTONTV/Launcher.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:FOTONTV/Launcher.git'
+                    url = 'https://launcher.fotontv.fun/'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.launcherwsapi
+}
