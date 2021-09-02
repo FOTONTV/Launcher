@@ -1,0 +1,82 @@
+//file:noinspection GrUnresolvedAccess
+sourceCompatibility = '16'
+targetCompatibility = '16'
+
+dependencies {
+    compileOnly group: 'org.fusesource.jansi', name: 'jansi', version: rootProject['verJansi']
+    compileOnly group: 'org.jline', name: 'jline', version: rootProject['verJline']
+    compileOnly group: 'org.jline', name: 'jline-reader', version: rootProject['verJline']
+    compileOnly group: 'org.jline', name: 'jline-terminal', version: rootProject['verJline']
+    compileOnly group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: rootProject['verBcprov']
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version: rootProject['verSlf4j']
+    api group: 'com.google.code.gson', name: 'gson', version: rootProject['verGson']
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: rootProject['verJunit']
+    testImplementation group: 'org.jline', name: 'jline', version: rootProject['verJline']
+    testImplementation group: 'org.jline', name: 'jline-reader', version: rootProject['verJline']
+    testImplementation group: 'org.jline', name: 'jline-terminal', version: rootProject['verJline']
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        //noinspection GrUnresolvedAccess
+        events "passed", "skipped", "failed"
+    }
+}
+
+jar {
+    //noinspection GrDeprecatedAPIUsage
+    classifier = 'clean'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    //noinspection GroovyAccessibility, GroovyAssignabilityCheck
+    archiveClassifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    //noinspection GroovyAccessibility, GroovyAssignabilityCheck
+    archiveClassifier = 'javadoc'
+}
+
+publishing {
+    publications {
+        launchercore(MavenPublication) {
+            artifactId = 'launcher-core'
+            artifact(jar) {
+                classifier ""
+            }
+            artifact sourcesJar
+            artifact javadocJar
+            pom {
+                name = 'FLauncher Core Utils'
+                description = 'FLauncher Core Utils'
+                url = 'https://launcher.fotontv.fun'
+                licenses {
+                    license {
+                        name = 'GNU General Public License, Version 3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'fotontv'
+                        name = 'FOTONTV'
+                        email = 'fotontv@fotontv.fun'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/FOTONTV/Launcher.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:FOTONTV/Launcher.git'
+                    url = 'https://launcher.fotontv.fun/'
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.launchercore
+}

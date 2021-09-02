@@ -1,0 +1,12 @@
+rootProject.name = 'FLauncher'
+
+include 'Launcher'
+include 'LauncherCore'
+include 'LauncherAPI'
+include 'LauncherAuthlib'
+include 'ServerWrapper'
+include 'LaunchServer'
+include 'LauncherModules'
+file('LauncherModules').eachDir { sub ->
+    if (sub.name.endsWith('_module') || sub.name.endsWith('_swmodule') || sub.name.endsWith('_lmodule')) include 'LauncherModules:' + sub.name
+}
