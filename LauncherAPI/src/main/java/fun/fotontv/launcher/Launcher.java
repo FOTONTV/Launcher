@@ -7,11 +7,14 @@ import fun.fotontv.utils.helper.IOHelper;
 import fun.fotontv.utils.helper.LogHelper;
 import fun.fotontv.utils.helper.SecurityHelper;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.NoSuchFileException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -40,7 +43,6 @@ public final class Launcher {
 
     // Constants
     public static final String GUARD_DIR = "guard";
-    public static final String CONFIG_FILE = "config.bin";
     private static final AtomicReference<LauncherConfig> CONFIG = new AtomicReference<>();
     private static final Pattern UUID_PATTERN = Pattern.compile("-", Pattern.LITERAL);
     public static ClientProfile profile;
@@ -49,12 +51,8 @@ public final class Launcher {
     public static LauncherConfig getConfig() {
         LauncherConfig config = CONFIG.get();
         if (config == null) {
-            try (HInput input = new HInput(IOHelper.newInput(IOHelper.getResourceURL(CONFIG_FILE)))) {
-                config = new LauncherConfig(input);
-            } catch (IOException | InvalidKeySpecException e) {
-                throw new SecurityException(e);
-            }
-            CONFIG.set(config);
+            Map<String, byte[]> runtime = new HashMap<>(256);
+            config = new LauncherConfig("ws://foxesworld.ru:9274/api", runtime, "FoxesWorld");
         }
         return config;
     }

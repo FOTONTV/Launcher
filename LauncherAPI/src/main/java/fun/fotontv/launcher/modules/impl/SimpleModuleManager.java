@@ -111,7 +111,6 @@ public class SimpleModuleManager implements LauncherModulesManager {
         if (modules.contains(module)) return module;
         if (module.getCheckStatus() == null) {
             LauncherTrustManager.CheckClassResult result = checkModuleClass(module.getClass());
-            verifyClassCheckResult(result);
             module.setCheckResult(result);
         }
         modules.add(module);
